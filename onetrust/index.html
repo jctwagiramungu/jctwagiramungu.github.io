@@ -4,53 +4,17 @@
   <script language="JavaScript" type="text/javascript"
           src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js">
   </script>
-
   <script>
 
-const PUBLIC_KEY = 'Q29va2llIEJhbm5lciB1c2luZyBPbmVUcnVzdA==';
-  // Header
-var oHeader = {alg: 'HS256', typ: 'JWT'};
-// Payload
-var oPayload = {};
-var tNow = KJUR.jws.IntDate.get('now');
-var tEnd = KJUR.jws.IntDate.get('now + 1day');
-//oPayload.iss = "http://foo.com";
-oPayload.sub = "jeanclaude.twagiramungu@onetrust.com";
-oPayload.nbf = tNow;
-oPayload.iat = tNow;
-oPayload.exp = tEnd;
-//oPayload.jti = "id123456";
-//oPayload.aud = "http://foo.com/employee";
-// Sign JWT, password=616161
-var sHeader = JSON.stringify(oHeader);
-var sPayload = JSON.stringify(oPayload);
-var sJWT = KJUR.jws.JWS.sign("HS256", sHeader, sPayload, PUBLIC_KEY);
+  var OneTrust = {
+  dataSubjectParams: {
+  id: "jeanclaude.twagiramungu@onetrust.com",
+  isAnonymous: false,
+  token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWFuY2xhdWRlLnR3YWdpcmFtdW5ndUBvbmV0cnVzdC5jb20iLCJuYmYiOjE2OTA0NzAwMzQsImlhdCI6MTY5MDQ3MDAzNCwiZXhwIjoxNjkwNTU2NDM0fQ.U0hUuGaywovKRz72mj-uWADEYreXyJD9ZSnXmZPfBSw'
+  }
+  };
 
-console.log(sJWT);
-
-window.dataLayer = window.dataLayer || [];
-
-function gtag() {
-    dataLayer.push(arguments);
-}
-gtag('consent', 'default', {
-    ad_storage: 'denied',
-    analytics_storage: 'denied',
-    functionality_storage: 'denied',
-    personalization_storage: 'denied',
-    security_storage: 'granted',
-    wait_for_update: 500
-});
-
-var OneTrust = {
-      dataSubjectParams: {
-          id: "jeanclaude.twagiramungu@onetrust.com",
-          isAnonymous: false,
-          token : '' + sJWT
-      }
-    };
-
-</script>
+  </script>
   <!-- OptanonConsentNoticeStart -->
 
   <script src="https://cdn.cookielaw.org/consent/4e2c6995-427d-4692-a2c5-c3c932213c8c-test/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="4e2c6995-427d-4692-a2c5-c3c932213c8c-test" ></script>
@@ -64,6 +28,8 @@ function OptanonWrapper() { }
 <h1>My First Heading</h1>
 
 <p>My first paragraph.</p>
-
+<!-- OneTrust Cookies List start -->
+<div id="ot-sdk-cookie-policy"></div>
+<!-- OneTrust Cookies List end -->
 </body>
 </html>
