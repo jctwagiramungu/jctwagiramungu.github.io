@@ -6,6 +6,61 @@
   </script>
   <!-- OptanonConsentNoticeStart -->
 
+  <script>
+
+  function getCookieValue(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.startsWith(cookieName + '=')) {
+            return cookie.substring(cookieName.length + 1);
+        }
+    }
+    return null;
+  }
+
+  function getConsentId(cookieName) {
+      const cookieValue = getCookieValue(cookieName);
+      if (cookieValue) {
+          const match = cookieValue.match(/consentId=([^&]*)/);
+          return match ? match[1] : null;
+      }
+      return null;
+  }
+
+   const cookieName = 'OptanonConsent';
+   var consentId = '4cf9e935-df20-49c3-bd3e-892ad83b8fd2';//getConsentId(cookieName);
+
+   const PUBLIC_KEY = 'Q29va2llIEJhbm5lciB1c2luZyBPbmVUcnVzdA==';
+      // Header
+    var oHeader = {alg: 'HS256', typ: 'JWT'};
+    // Payload
+    var oPayload = {};
+    var tNow = KJUR.jws.IntDate.get('now');
+    var tEnd = KJUR.jws.IntDate.get('now + 1year');
+    //oPayload.iss = "http://foo.com";
+    oPayload.sub = consentId;
+    oPayload.nbf = tNow;
+    oPayload.iat = tNow;
+    oPayload.exp = tEnd;
+    //oPayload.jti = "id123456";
+    //oPayload.aud = "http://foo.com/employee";
+    // Sign JWT, password=616161
+    var sHeader = JSON.stringify(oHeader);
+    var sPayload = JSON.stringify(oPayload);
+    var sJWT = KJUR.jws.JWS.sign("HS256", sHeader, sPayload, PUBLIC_KEY);
+
+    console.log("consentId :" + consentId);
+    console.log("sJWT :" + sJWT);
+    var OneTrust = {
+      dataSubjectParams: {
+      id: consentId,
+      isAnonymous: false,
+      token : sJWT
+       }
+      };
+
+  </script>
   <script src="https://cdn.cookielaw.org/consent/4e2c6995-427d-4692-a2c5-c3c932213c8c-test/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="4e2c6995-427d-4692-a2c5-c3c932213c8c-test" ></script>
   <script type="text/javascript">
 function OptanonWrapper() { }
