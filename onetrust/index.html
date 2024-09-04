@@ -7,16 +7,59 @@
 
   <script>
 
+  function getCookieValue(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.startsWith(cookieName + '=')) {
+            return cookie.substring(cookieName.length + 1);
+        }
+    }
+    return null;
+  }
 
- var OneTrust = {
-  dataSubjectParams: {
-  id: "jeanclaude.twagiramungu.45@onetrust.com",
-  isAnonymous: false,
-  token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWFuY2xhdWRlLnR3YWdpcmFtdW5ndS40NUBvbmV0cnVzdC5jb20iLCJuYmYiOjE2OTQ2MTIxOTgsImlhdCI6MTY5NDYxMjE5OCwiZXhwIjoxNzI2MTQ4MTk4fQ.ZtaueFX83gtxvPdsNuwWXtUePVqK8iJ_pyAmCWQODCw'
-   }
-  };
+  function getConsentId(cookieName) {
+      const cookieValue = getCookieValue(cookieName);
+      if (cookieValue) {
+          const match = cookieValue.match(/consentId=([^&]*)/);
+          return match ? match[1] : null;
+      }
+      return null;
+  }
 
-</script>
+   const cookieName = 'OptanonConsent';
+   var consentId = '4cf9e935-df20-49c3-bd3e-892ad83b8fd2';//getConsentId(cookieName);
+
+   const PUBLIC_KEY = 'Q29va2llIEJhbm5lciB1c2luZyBPbmVUcnVzdA==';
+      // Header
+    var oHeader = {alg: 'HS256', typ: 'JWT'};
+    // Payload
+    var oPayload = {};
+    var tNow = KJUR.jws.IntDate.get('now');
+    var tEnd = KJUR.jws.IntDate.get('now + 1year');
+    //oPayload.iss = "http://foo.com";
+    oPayload.sub = consentId;
+    oPayload.nbf = tNow;
+    oPayload.iat = tNow;
+    oPayload.exp = tEnd;
+    //oPayload.jti = "id123456";
+    //oPayload.aud = "http://foo.com/employee";
+    // Sign JWT, password=616161
+    var sHeader = JSON.stringify(oHeader);
+    var sPayload = JSON.stringify(oPayload);
+    var sJWT = KJUR.jws.JWS.sign("HS256", sHeader, sPayload, PUBLIC_KEY);
+
+    console.log("consentId :" + consentId);
+    console.log("sJWT :" + sJWT);
+    var OneTrust = {
+      dataSubjectParams: {
+      id: consentId,
+      isAnonymous: false,
+      token : sJWT
+       }
+      };
+
+  </script>
   <!-- OptanonConsentNoticeStart -->
 
   <script src="https://cdn.cookielaw.org/consent/a44c3778-2182-43a8-bab4-1d3fad43d5b4-test/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="a44c3778-2182-43a8-bab4-1d3fad43d5b4-test" ></script>
@@ -28,6 +71,8 @@ function OptanonWrapper() { }
 <body>
 
 <h1>My First Heading</h1>
+
+<a href="https://jctwagiramungu.github.io/onetrust/">Connected Area A</a>
 
 <p>My first paragraph.</p>
 <!-- OneTrust Cookies List start -->
